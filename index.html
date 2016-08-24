@@ -1,0 +1,146 @@
+<HTML>
+
+<HEAD>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Barchart with Box Plot (uncertainty)</title>
+    <link rel="icon" href="https://avatars3.githubusercontent.com/u/6544448?s=460" type="image/png">
+
+    <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="d3.v3.min.js"></script>
+    <script type="text/javascript" src="barchartWithBoxPlot.js"></script>
+
+    <style type="text/css">
+        .barchartWitBoxPlot .axis text {
+            fill: #525252;
+            font: 13px "Futura", sans-serif;
+        }
+
+        .barchartWitBoxPlot .axis path, .axis line {
+            fill: none;
+            stroke: #dddddd;
+        }
+
+        .barchartWitBoxPlot rect {
+            cursor: pointer;
+        }
+    </style>
+</HEAD>
+
+<BODY>
+
+<div class="container-fluid">
+    <BR/>
+
+    <div class="col-sm-12 col-md-12">
+        <div id="containerBarchart" class="col-sm-7 col-md-7"></div>
+
+        <div class="col-sm-3 col-md-3">
+            <h2>Variables</h2>
+
+            <div id="containerVariables"></div>
+            <h2>Uncertainty</h2>
+
+            <p><a id="buttonUncertainty" class="btn btn-primary" href="#" role="button">Display or Hide Uncertainty</a></p>
+            <p><a id="buttonToggleAxes" class="btn btn-primary" href="#" role="button">Switch axes</a></p>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-12">
+    <pre>
+        Data structure sample :
+        data = [
+            {
+                Name : "Africa",
+                Data0 : {value : 68, uncertainty : 54},
+                Data1 : {value : 11, uncertainty : 3},
+                Data2 : {value : 107, uncertainty : 5},
+                Data3 : {value : 83, uncertainty : 24},
+            },
+            {
+                Name : "Africa",
+                Data0 : {value : 81, uncertainty : 7},
+                Data1 : {value : 15, uncertainty : 2},
+                Data2 : {value : 179, uncertainty : 78},
+                Data3 : {value : 64, uncertainty : 9},
+            },
+            ...
+        ]</pre>
+    </div>
+
+    <!--Github link-->
+    <div style="position: absolute; top: 0; right: 0;">
+        <a href="https://github.com/VanessaMaigne/BarchartWithBoxPlot" target="_blank">
+            <img src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67"
+                 alt="Fork me on GitHub"
+                 data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    function createRandomData( dataNumber )
+    {
+        var data = [];
+        $.each( regions, function( i, d )
+        {
+            var obj = new Object();
+            obj.Name = d;
+            for( var ii = 0; ii < dataNumber; ii++ )
+            {
+                var randomValue = Math.floor( (Math.random() * 100) + 1 );
+                var randomUncertainty = Math.floor( (Math.random() * randomValue) + 1 );
+                obj["Data" + ii] = {"value" : randomValue, "uncertainty" : randomUncertainty };
+            }
+            data.push( obj );
+        } );
+        return data;
+    }
+
+    function displayVariables( variables )
+    {
+        $.each( variables, function( i, d )
+        {
+            $( "#containerVariables" ).append( '<a id="' + d.name + '" class="btn btn-default variable" href="#" role="button">' + d.name + '</a>' );
+        } );
+
+        $( ".variable" ).on( "click", function()
+        {
+            barchart.addOrRemoveToBarchart( this.id );
+        } )
+    }
+
+    // Action on uncertainty button
+    $( "#buttonUncertainty" ).on( "click", function( d )
+    {
+        barchart.changeDisplayUncertainty();
+        barchart.update();
+    } );
+
+    // Action on axes button
+    $( "#buttonToggleAxes" ).on( "click", function( d )
+    {
+        barchart.switchAxes();
+        barchart.update();
+    } );
+
+    // Data
+    var regions = ["Africa", "America", "Asia", "Australia", "Europe", "Russia"];
+    var data = createRandomData( 5 );
+
+    // Create barchart
+    var barchart = barchartWithBoxPlot( "#containerBarchart", 400, 300, data );
+    var allVariables = barchart.getDisplayedVariables();
+    barchart.setDisplayedVariables( barchart.getDisplayedVariables().slice( 0, 3 ) );
+    //    barchart.setKeyXAxe("Name");
+    barchart.create();
+
+    displayVariables( allVariables );
+</script>
+</BODY>
+</HTML>
+
