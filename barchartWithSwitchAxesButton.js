@@ -1,7 +1,7 @@
 /*!
- * barchartWithBoxPlot _ version 1.0
+ * barchartWithBoxPlotAndSwitchAxes _ version 1.0
  * ##################################################
- *   Created by vmaigne@gmail.com _ november 2014
+ *   Created by vmaigne@gmail.com _ August 2016
  * ##################################################
  * This library create a barchart with box plot.
  * You can choose which variables you want to display, by adding or remove one by one.
